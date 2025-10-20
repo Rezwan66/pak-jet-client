@@ -1,8 +1,8 @@
 const ThemeSwitch = () => {
   return (
     <div className="dropdown">
-      <div tabIndex={0} role="button" className="btn m-0">
-        Theme
+      <div tabIndex={0} role="button" className="btn m-1 rounded-full">
+        ⌘
         <svg
           width="12px"
           height="12px"

@@ -14,6 +14,7 @@ const Banner = () => {
       showStatus={false}
       interval={4000}
       transitionTime={1000}
+      showArrows={false}
     >
       <div className="rounded-4xl">
         <img src={bannerImg1} />
