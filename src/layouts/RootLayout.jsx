@@ -4,13 +4,13 @@ import Footer from '../pages/shared/Footer/Footer';
 
 const RootLayout = () => {
   return (
-    <>
+    <div className="py-8">
       <NavBar />
       <div className="container min-h-screen">
         <Outlet />
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 export default RootLayout;
