@@ -3,7 +3,7 @@ import PakJetLogo from '../PakJetLogo/PakJetLogo';
 const Footer = () => {
   return (
     <>
-      <footer className="footer footer-horizontal footer-center bg-neutral text-neutral-content p-10">
+      <footer className="footer footer-horizontal footer-center bg-neutral text-neutral-content p-10 rounded-4xl my-8">
         <aside>
           <PakJetLogo />
           <p className="font-bold">
