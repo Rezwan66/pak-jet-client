@@ -4,9 +4,9 @@ import Footer from '../pages/shared/Footer/Footer';
 
 const RootLayout = () => {
   return (
-    <div className="py-8">
+    <div className="py-8 max-w-7xl mx-auto">
       <NavBar />
-      <div className="container min-h-screen">
+      <div className=" min-h-screen">
         <Outlet />
       </div>
       <Footer />
