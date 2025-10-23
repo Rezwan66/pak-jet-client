@@ -16,7 +16,7 @@ const Login = () => {
       <div>
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Welcome Back</h1>
-          <p className="py-6">Login with Pakjet</p>
+          <p className="pt-2 pb-10">Login with Pakjet</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset className="fieldset">
@@ -24,15 +24,22 @@ const Login = () => {
             <label className="label">Email</label>
             <input
               type="email"
-              {...register('email', {
-                validate: value =>
-                  value.includes('@') || 'Please enter a valid email ID.',
-              })}
+              {...register(
+                'email',
+                { required: true }
+                //     {
+                //     validate: value =>
+                //       value.includes('@') || 'Please enter a valid email ID.',
+                //   }
+              )}
               className="input"
               placeholder="Email"
             />
-            {errors.email && (
+            {/* {errors.email && (
               <p className="text-red-500">{errors.email?.message}</p>
+            )} */}
+            {errors.email?.type === 'required' && (
+              <p className="text-red-500">Email is required !</p>
             )}
             {/* password */}
             <label className="label">Password</label>
