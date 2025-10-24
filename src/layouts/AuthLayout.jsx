@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Link, Outlet } from 'react-router';
 import authImg from '../assets/authImage.png';
 import PakJetLogo from '../pages/shared/PakJetLogo/PakJetLogo';
 
@@ -7,9 +7,9 @@ const AuthLayout = () => {
     <>
       <div className="relative min-h-screen ">
         {/* logo fixed at very top-left */}
-        <div className="absolute top-4 left-4 z-20">
+        <Link to="/" className="absolute top-4 left-4 z-20">
           <PakJetLogo />
-        </div>
+        </Link>
 
         {/* stacked on small screens, two equal halves on large screens */}
         <div className="flex flex-col-reverse md:flex-row min-h-screen">

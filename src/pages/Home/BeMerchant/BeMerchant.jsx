@@ -19,10 +19,10 @@ const BeMerchant = () => {
               parcels in every corner of Bangladesh right on time.
             </p>
             <div className="flex flex-row gap-4">
-              <button className="btn btn-success rounded-full">
+              <button className="btn btn-primary text-black rounded-full">
                 Become a Merchant
               </button>
-              <button className="btn btn-outline btn-success rounded-full">
+              <button className="btn btn-outline btn-primary rounded-full hover:text-black">
                 Earn with Pakjet Courier
               </button>
             </div>

@@ -7,8 +7,33 @@
 /* @plugin "daisyui/theme" {
   name: 'light';
   default: true;
-  --color-primary: blue;
-  --color-secondary: teal;
+  --color-primary: #caeb66;
+} */
+
+@plugin "daisyui/theme" {
+  name: 'default'; /* or "light" if you use that name */
+  default: true;
+  --color-primary: #caeb66;
+}
+
+/* @plugin "daisyui/theme" {
+  name: 'dark';
+  --color-primary: #caeb66;
+}
+
+@plugin "daisyui/theme" {
+  name: 'cyberpunk';
+  --color-primary: #caeb66;
+}
+
+@plugin "daisyui/theme" {
+  name: 'valentine';
+  --color-primary: #caeb66;
+}
+
+@plugin "daisyui/theme" {
+  name: 'aqua';
+  --color-primary: #caeb66;
 } */
 
 .font-urbanist {
