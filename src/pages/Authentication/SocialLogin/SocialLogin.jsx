@@ -1,9 +1,29 @@
+import { useLocation, useNavigate } from 'react-router';
+import useAuth from '../../../hooks/useAuth';
+
 const SocialLogin = () => {
+  const { signInWithGoogle } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then(res => {
+        console.log(res.user);
+        navigate(location?.state?.from?.pathname || '/', { replace: true });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
   return (
     <div>
       <div className="divider divider-primary">OR</div>
       {/* Google */}
-      <button className="btn btn-block bg-white text-black border-[#e5e5e5]">
+      <button
+        onClick={handleGoogleSignIn}
+        className="btn btn-block bg-white text-black border-[#e5e5e5]"
+      >
         <svg
           aria-label="Google logo"
           width="16"

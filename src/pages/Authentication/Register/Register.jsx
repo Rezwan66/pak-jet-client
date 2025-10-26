@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Register = () => {
@@ -10,6 +10,8 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   const { createUser, updateUser } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const onRegister = data => {
     console.log(data);
@@ -17,7 +19,10 @@ const Register = () => {
       .then(result => {
         console.log(result.user);
         updateUser(data.name, data?.photo)
-          .then(result => console.log(result.user))
+          .then(result => {
+            console.log(result?.user);
+            navigate(location?.state?.from?.pathname || '/', { replace: true });
+          })
           .catch(error => {
             console.error(error);
           });

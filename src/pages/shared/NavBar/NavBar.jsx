@@ -1,18 +1,34 @@
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import ThemeSwitch from '../../../components/ThemeSwitch';
 import PakJetLogo from '../PakJetLogo/PakJetLogo';
+import useAuth from '../../../hooks/useAuth';
 
 const NavBar = () => {
+  const { user, loading, logOut } = useAuth();
   const navItems = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
       <li>
+        <NavLink to="/coverage">Coverage</NavLink>
+      </li>
+      <li>
         <NavLink to="/about">About Us</NavLink>
       </li>
     </>
   );
+  // console.log(user?.displayName);
+
+  const handleLogout = () => {
+    logOut()
+      .then(res => {
+        console.log(res?.user);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
   return (
     <>
       <div className="navbar bg-base-200 shadow-sm rounded-2xl py-4 px-8 mt-0 mb-9">
@@ -52,6 +68,29 @@ const NavBar = () => {
         <div className="navbar-end">
           {/* <a className="btn"> */}
           <ThemeSwitch />
+          {loading ? (
+            <span></span>
+          ) : user ? (
+            <div className="flex items-center justify-center gap-1">
+              <button className="w-10 h-10 rounded-full bg-primary text-black flex items-center justify-center font-bold">
+                {user?.displayName
+                  ?.split(/\s+/)
+                  .filter(Boolean)
+                  .map(n => n[0])
+                  .slice(0, 2)
+                  .join('')
+                  .toUpperCase()}
+              </button>
+              <button onClick={handleLogout} className="btn">
+                SignOut
+              </button>
+            </div>
+          ) : (
+            <button className="btn">
+              <Link to="/login">Sign In</Link>
+            </button>
+          )}
+
           {/* </a> */}
         </div>
       </div>

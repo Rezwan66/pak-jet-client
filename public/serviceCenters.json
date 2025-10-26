@@ -1,0 +1,152 @@
+[
+  {
+    "region": "Bavaria",
+    "district": "Munich",
+    "city": "Munich",
+    "covered_area": [
+      "Altstadt-Lehel",
+      "Maxvorstadt",
+      "SchwabenQuartier",
+      "Ludwigsvorstadt-Isarvorstadt"
+    ],
+    "status": "active",
+    "flowchart": "https://example.com/munich-flowchart.png",
+    "longitude": 11.582,
+    "latitude": 48.1351
+  },
+  {
+    "region": "Berlin",
+    "district": "Berlin",
+    "city": "Berlin",
+    "covered_area": ["Mitte", "Prenzlauer Berg", "Kreuzberg", "Charlottenburg"],
+    "status": "active",
+    "flowchart": "https://example.com/berlin-flowchart.png",
+    "longitude": 13.405,
+    "latitude": 52.52
+  },
+  {
+    "region": "North Rhine-Westphalia",
+    "district": "Cologne",
+    "city": "Cologne",
+    "covered_area": ["Altstadt", "Ehrenfeld", "Kalk", "Porz"],
+    "status": "active",
+    "flowchart": "https://example.com/cologne-flowchart.png",
+    "longitude": 6.9603,
+    "latitude": 50.9375
+  },
+  {
+    "region": "Hesse",
+    "district": "Frankfurt",
+    "city": "Frankfurt",
+    "covered_area": ["Innenstadt", "Bockenheim", "Sachsenhausen", "Nordend"],
+    "status": "active",
+    "flowchart": "https://example.com/frankfurt-flowchart.png",
+    "longitude": 8.6821,
+    "latitude": 50.1109
+  },
+  {
+    "region": "Bavaria",
+    "district": "Nuremberg",
+    "city": "Nuremberg",
+    "covered_area": ["Altstadt", "St. Johannis", "Gostenhof", "Mögeldorf"],
+    "status": "active",
+    "flowchart": "https://example.com/nuremberg-flowchart.png",
+    "longitude": 11.0786,
+    "latitude": 49.4521
+  },
+  {
+    "region": "Hamburg",
+    "district": "Hamburg",
+    "city": "Hamburg",
+    "covered_area": ["St. Pauli", "Altona", "HafenCity", "Eimsbüttel"],
+    "status": "active",
+    "flowchart": "https://example.com/hamburg-flowchart.png",
+    "longitude": 9.9937,
+    "latitude": 53.5511
+  },
+  {
+    "region": "Lower Saxony",
+    "district": "Hannover",
+    "city": "Hannover",
+    "covered_area": ["Mitte", "Linden", "Vahrenwald", "List"],
+    "status": "active",
+    "flowchart": "https://example.com/hannover-flowchart.png",
+    "longitude": 9.732,
+    "latitude": 52.3759
+  },
+  {
+    "region": "Baden-Württemberg",
+    "district": "Stuttgart",
+    "city": "Stuttgart",
+    "covered_area": [
+      "Stuttgart-Mitte",
+      "Bad Cannstatt",
+      "Zuffenhausen",
+      "Feuerbach"
+    ],
+    "status": "active",
+    "flowchart": "https://example.com/stuttgart-flowchart.png",
+    "longitude": 9.18,
+    "latitude": 48.7758
+  },
+  {
+    "region": "Saxony",
+    "district": "Dresden",
+    "city": "Dresden",
+    "covered_area": ["Altstadt", "Neustadt", "Pieschen", "Klotzsche"],
+    "status": "active",
+    "flowchart": "https://example.com/dresden-flowchart.png",
+    "longitude": 13.7373,
+    "latitude": 51.0504
+  },
+  {
+    "region": "Rhineland-Palatinate",
+    "district": "Mainz",
+    "city": "Mainz",
+    "covered_area": ["Altstadt", "Oberstadt", "Weisenau", "Hechtsheim"],
+    "status": "active",
+    "flowchart": "https://example.com/mainz-flowchart.png",
+    "longitude": 8.2721,
+    "latitude": 50.0
+  },
+  {
+    "region": "Saxony-Anhalt",
+    "district": "Halle",
+    "city": "Halle",
+    "covered_area": ["Altstadt", "Neustadt", "Halle-Süd", "Trotha"],
+    "status": "active",
+    "flowchart": "https://example.com/halle-flowchart.png",
+    "longitude": 11.967,
+    "latitude": 51.4825
+  },
+  {
+    "region": "Saxony-Anhalt",
+    "district": "Magdeburg",
+    "city": "Magdeburg",
+    "covered_area": ["Altstadt", "Buckau", "Cracau", "Kannenstieg", "Salbke"],
+    "status": "active",
+    "flowchart": "https://example.com/magdeburg-flowchart.png",
+    "longitude": 11.6276,
+    "latitude": 52.1207
+  },
+  {
+    "region": "Thuringia",
+    "district": "Erfurt",
+    "city": "Erfurt",
+    "covered_area": ["Altstadt", "Darrwinkel", "Nordost", "Ilversgehofen"],
+    "status": "active",
+    "flowchart": "https://example.com/erfurt-flowchart.png",
+    "longitude": 11.0299,
+    "latitude": 50.9848
+  },
+  {
+    "region": "Brandenburg",
+    "district": "Potsdam",
+    "city": "Potsdam",
+    "covered_area": ["Altstadt", "Babelsberg", "Kirchmöser", "Grube"],
+    "status": "active",
+    "flowchart": "https://example.com/potsdam-flowchart.png",
+    "longitude": 13.0675,
+    "latitude": 52.3967
+  }
+]

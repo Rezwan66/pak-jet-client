@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { RouterProvider } from 'react-router';
@@ -12,10 +12,12 @@ AOS.init();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <div className="font-urbanist ">
+    <div className="font-urbanist">
       <ThemeProvider>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <Suspense fallback={<div className="skeleton h-32 w-32"></div>}>
+            <RouterProvider router={router} />
+          </Suspense>
         </AuthProvider>
       </ThemeProvider>
     </div>
