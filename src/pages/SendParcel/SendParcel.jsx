@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 // import { warehouses } from './warehouses';
 import { useLoaderData } from 'react-router';
 import useAuth from '../../hooks/useAuth';
+import { useAxiosSecure } from '../../hooks/useAxiosSecure';
 
 const generateTrackingID = () => {
   const date = new Date();
@@ -25,6 +26,7 @@ const SendParcel = () => {
       senderName: user?.displayName || 'Name',
     },
   });
+  const axiosSecure = useAxiosSecure();
   const serviceCenters = useLoaderData();
 
   const [deliveryCost, setDeliveryCost] = useState(null);
@@ -186,21 +188,19 @@ const SendParcel = () => {
         console.log(parcel);
         //save data to server
 
-        // // ✅ Save to backend (example)
-        // fetch('/api/parcels', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(parcel),
-        // })
-        //   .then(res => res.json())
-        //   .then(() => {
-        //     Swal.fire({
-        //       title: 'Success!',
-        //       text: 'Your parcel has been created successfully 🎉',
-        //       icon: 'success',
-        //       confirmButtonColor: '#22c55e',
-        //     });
-        //   })
+        axiosSecure.post('/parcels', parcel).then(res => {
+          console.log(res.data);
+          if (res.data.insertedId) {
+            // redirect to payment gateway
+            Swal.fire({
+              title: 'Redirecting...',
+              text: 'Proceed to payment gateway.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          }
+        });
         //   .catch(() => {
         //     Swal.fire({
         //       title: 'Error!',
@@ -314,7 +314,7 @@ const SendParcel = () => {
                   {...register('senderName', { required: true })}
                   className="input input-bordered w-full"
                   placeholder="Sender Name"
-                  readOnly
+                  //   readOnly
                 />
               </div>
               <div className="flex-1 form-control mb-2 flex flex-col">
