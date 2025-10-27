@@ -21,7 +21,7 @@ const Register = () => {
         updateUser(data.name, data?.photo)
           .then(result => {
             console.log(result?.user);
-            navigate(location?.state?.from?.pathname || '/', { replace: true });
+            navigate(location?.state?.from || '/', { replace: true });
           })
           .catch(error => {
             console.error(error);

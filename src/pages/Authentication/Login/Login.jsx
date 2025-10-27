@@ -7,6 +7,7 @@ const Login = () => {
   const { signIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  console.log(location);
   const {
     register,
     formState: { errors },
@@ -18,7 +19,7 @@ const Login = () => {
     signIn(data.email, data.password)
       .then(res => {
         console.log(res?.user);
-        navigate(location?.state?.from?.pathname || '/', { replace: true });
+        navigate(location?.state?.from || '/', { replace: true });
       })
       .catch(error => {
         console.error(error);

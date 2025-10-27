@@ -4,13 +4,15 @@ import { useAxiosSecure } from '../../../hooks/useAxiosSecure';
 import { FaEye, FaTrash, FaMoneyBill } from 'react-icons/fa';
 import { formatDate } from '../../../utils/utilFunctions';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
   const {
     data: parcels = [],
-    isPending,
+    // isPending,
     refetch,
   } = useQuery({
     queryKey: ['my-parcels', user?.email],
@@ -29,9 +31,9 @@ const MyParcels = () => {
     // e.g. open modal or navigate(`/parcel/${parcel._id}`)
   };
 
-  const handlePay = parcel => {
-    console.log('Pay for parcel:', parcel);
-    // handle payment logic here
+  const handlePay = id => {
+    console.log('Pay for parcel:', id);
+    navigate(`/dashboard/payment/${id}`);
   };
 
   const handleDelete = async id => {
@@ -132,25 +134,38 @@ const MyParcels = () => {
 
                     {/* Actions */}
                     <td className="flex gap-3">
-                      <button
-                        onClick={() => handleView(parcel)}
-                        className="btn btn-sm btn-info text-white"
+                      <div className="tooltip" data-tip="View parcel details">
+                        <button
+                          onClick={() => handleView(parcel)}
+                          className="btn btn-sm btn-info text-white"
+                        >
+                          <FaEye />
+                        </button>
+                      </div>
+                      <div
+                        className="tooltip"
+                        data-tip={
+                          parcel.payment_status === 'paid'
+                            ? 'Already paid'
+                            : 'Pay for parcel'
+                        }
                       >
-                        <FaEye />
-                      </button>
-                      <button
-                        onClick={() => handlePay(parcel)}
-                        className="btn btn-sm btn-success text-white"
-                        disabled={parcel.payment_status === 'paid'}
-                      >
-                        <FaMoneyBill />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(parcel._id)}
-                        className="btn btn-sm btn-error text-white"
-                      >
-                        <FaTrash />
-                      </button>
+                        <button
+                          onClick={() => handlePay(parcel._id)}
+                          className="btn btn-sm btn-success text-white"
+                          disabled={parcel.payment_status === 'paid'}
+                        >
+                          <FaMoneyBill />
+                        </button>
+                      </div>
+                      <div className="tooltip" data-tip="Delete parcel">
+                        <button
+                          onClick={() => handleDelete(parcel._id)}
+                          className="btn btn-sm btn-error text-white"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

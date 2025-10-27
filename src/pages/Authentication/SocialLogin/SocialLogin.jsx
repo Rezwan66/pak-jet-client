@@ -10,7 +10,7 @@ const SocialLogin = () => {
     signInWithGoogle()
       .then(res => {
         console.log(res.user);
-        navigate(location?.state?.from?.pathname || '/', { replace: true });
+        navigate(location?.state?.from || '/', { replace: true });
       })
       .catch(err => {
         console.error(err);
