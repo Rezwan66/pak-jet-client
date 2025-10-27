@@ -1,4 +1,7 @@
 import { NavLink, Outlet } from 'react-router';
+import PakJetLogo from '../pages/shared/PakJetLogo/PakJetLogo';
+// import { RiHome6Fill } from 'react-icons/ri';
+import { TfiHome, TfiPackage } from 'react-icons/tfi';
 
 const DashboardLayout = () => {
   return (
@@ -43,13 +46,20 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-80 p-4">
+        <ul className="menu bg-base-200 min-h-full w-80 p-4 text-xl space-y-2">
+          <PakJetLogo />
           {/* Sidebar content here */}
-          <li>
-            <NavLink to="/">Home</NavLink>
+          <li className="mt-5 border-b-[1px]">
+            <NavLink to="/dashboard">
+              <TfiHome />
+              Home
+            </NavLink>
           </li>
-          <li>
-            <NavLink to="myParcels">My Parcels</NavLink>
+          <li className="border-b-[1px]">
+            <NavLink to="myParcels">
+              <TfiPackage />
+              My Parcels
+            </NavLink>
           </li>
         </ul>
       </div>

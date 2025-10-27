@@ -3,11 +3,16 @@ import useAuth from '../../../hooks/useAuth';
 import { useAxiosSecure } from '../../../hooks/useAxiosSecure';
 import { FaEye, FaTrash, FaMoneyBill } from 'react-icons/fa';
 import { formatDate } from '../../../utils/utilFunctions';
+import Swal from 'sweetalert2';
 
 const MyParcels = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const { data: parcels = [], isPending } = useQuery({
+  const {
+    data: parcels = [],
+    isPending,
+    refetch,
+  } = useQuery({
     queryKey: ['my-parcels', user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/parcels?email=${user.email}`);
@@ -30,10 +35,43 @@ const MyParcels = () => {
   };
 
   const handleDelete = async id => {
-    // if (window.confirm('Are you sure you want to delete this parcel?')) {
-    //   await fetch(`http://localhost:5000/parcels/${id}`, { method: 'DELETE' });
-    //   setParcels(prev => prev.filter(p => p._id !== id));
-    // }
+    const confirm = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This parcel will be permanently deleted!',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      confirmButtonColor: '#e11d48', //red-600
+      cancelButtonColor: '#6b7280', //gray-500
+    });
+    if (confirm.isConfirmed) {
+      try {
+        console.log('confirmed clicked id:>', id);
+        axiosSecure.delete(`/parcels/${id}`).then(res => {
+          if (res.data.deletedCount) {
+            console.log('deleted parcel::>', res.data);
+            // Show success message
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your parcel has been deleted.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false,
+            });
+            refetch();
+          } else {
+            throw new Error('Failed to delete parcel.');
+          }
+        });
+      } catch (error) {
+        Swal.fire(
+          'Error!',
+          error.message || 'Failed to delete parcel',
+          'error'
+        );
+      }
+    }
   };
 
   return (
@@ -47,6 +85,7 @@ const MyParcels = () => {
             <thead className="bg-base-200 text-base-content">
               <tr className="">
                 <th>#</th>
+                <th>Title</th>
                 <th>Type</th>
                 <th>Created At</th>
                 <th>Cost (€)</th>
@@ -61,9 +100,12 @@ const MyParcels = () => {
                 parcels.map((parcel, index) => (
                   <tr key={parcel._id} className="hover">
                     <td>{index + 1}</td>
+                    <td className="max-w-[180px] truncate">
+                      {parcel.parcelName}
+                    </td>
                     <td>
                       <span
-                        className={`badge text-xs ${
+                        className={`badge uppercase truncate text-xs ${
                           parcel.parcelType === 'document'
                             ? 'badge-info'
                             : 'badge-secondary'
@@ -78,7 +120,7 @@ const MyParcels = () => {
                     {/* Payment Status */}
                     <td>
                       <span
-                        className={`badge text-xs ${
+                        className={`badge uppercase text-xs ${
                           parcel.payment_status === 'paid'
                             ? 'badge-success'
                             : 'badge-error'

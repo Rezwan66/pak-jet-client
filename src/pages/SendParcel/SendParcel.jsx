@@ -27,6 +27,7 @@ const SendParcel = () => {
     },
   });
   const axiosSecure = useAxiosSecure();
+  // ensure we always have an array even if loader returns undefined while loading
   const serviceCenters = useLoaderData();
 
   const [deliveryCost, setDeliveryCost] = useState(null);
@@ -38,74 +39,130 @@ const SendParcel = () => {
   const receiverRegion = watch('receiverRegion');
 
   // --- Region list (unique) ---
-  const regionList = useMemo(
-    () => [
-      ...new Set((serviceCenters || []).map(s => s.region).filter(Boolean)),
-    ],
-    [serviceCenters]
-  );
+  const regionList = useMemo(() => {
+    // normalize and trim regions, preserve order
+    const regions = (serviceCenters || [])
+      .map(s => (s.region || '').toString().trim())
+      .filter(Boolean);
+    return [...new Set(regions)];
+  }, [serviceCenters]);
   //   another way----------->immediate/inline (fine for small arrays)
   // const uniqueRegions = [...new Set((serviceCenters || []).map(s => s.region).filter(Boolean))];
 
   // --- Filtered service centres by region ---
-  const filteredSenderCenters = serviceCenters.filter(
-    center => center.region === senderRegion
+  // memoize filtered lists so they update when serviceCenters or watched region changes
+  const filteredSenderCenters = useMemo(
+    () =>
+      (serviceCenters || []).filter(
+        center =>
+          String(center.region).trim() === String(senderRegion || '').trim()
+      ),
+    [serviceCenters, senderRegion]
   );
-  const filteredReceiverCenters = serviceCenters.filter(
-    center => center.region === receiverRegion
+
+  const filteredReceiverCenters = useMemo(
+    () =>
+      (serviceCenters || []).filter(
+        center =>
+          String(center.region).trim() === String(receiverRegion || '').trim()
+      ),
+    [serviceCenters, receiverRegion]
   );
 
   // --- Delivery cost calculation ---
   const calculateCost = (type, weight = 0, sender, receiver) => {
-    // returns { total: number, breakdown: { base, weightCharge, regionalSurcharge, sameRegion } }
+    // returns { total: number, breakdown: { base, extraWeightCharge, regionalSurcharge, sameRegion } }
     if (!sender || !receiver) {
       return {
         total: 0,
         breakdown: {
           base: 0,
-          weightCharge: 0,
+          extraWeightCharge: 0,
           regionalSurcharge: 0,
           sameRegion: false,
         },
       };
     }
-    const sameRegion = sender.region === receiver.region;
-    const w = parseFloat(weight) || 0;
-    let base = 0;
-    let weightCharge = 0;
+
+    const sameRegion =
+      String(sender.region || '').trim() ===
+      String(receiver.region || '').trim();
+    const w = Math.max(0, parseFloat(weight) || 0);
+
+    let base = 0; // base covers up to 3kg for non-docs, or fixed for documents
+    let extraWeightCharge = 0; // charge for weight above base threshold
     let regionalSurcharge = 0;
-    // Document type: fixed cost regardless of weight
+
     if (type === 'document') {
       base = sameRegion ? 6.0 : 8.0;
     } else if (type === 'non-document') {
-      if (w <= 3) {
-        base = sameRegion ? 11.0 : 15.0;
-      } else {
-        // pricing: 4€/kg for every kg above (or for total weight), plus regional surcharge for inter-region
-        weightCharge = 4.0 * w;
-        regionalSurcharge = sameRegion ? 0 : 10.0;
+      // base fee covers first 3kg
+      base = sameRegion ? 11.0 : 15.0;
+      if (w > 3) {
+        const extraKg = w - 3;
+        // 4€/kg for extra weight
+        extraWeightCharge = 4.0 * extraKg;
       }
+      // regional surcharge for inter-region
+      regionalSurcharge = sameRegion ? 0 : 10.0;
     }
 
     const total = parseFloat(
-      (base + weightCharge + regionalSurcharge).toFixed(2)
+      (base + extraWeightCharge + regionalSurcharge).toFixed(2)
     );
     return {
       total,
-      breakdown: { base, weightCharge, regionalSurcharge, sameRegion },
+      breakdown: { base, extraWeightCharge, regionalSurcharge, sameRegion },
     };
   };
 
   // --- Form submission ---
   const onSubmit = data => {
-    const sender = serviceCenters.find(
-      s => s.region === data.senderRegion && s.city === data.senderServiceCenter
-    );
-    const receiver = serviceCenters.find(
-      s =>
-        s.region === data.receiverRegion &&
-        s.city === data.receiverServiceCenter
-    );
+    // robust finder: normalize (trim, case-insensitive)
+    const normalize = v =>
+      String(v || '')
+        .trim()
+        .toLowerCase();
+
+    const findCenter = (region, city) => {
+      const r = normalize(region);
+      const ci = normalize(city);
+      // exact match region+city
+      let found = (serviceCenters || []).find(
+        c => normalize(c.region) === r && normalize(c.city) === ci
+      );
+      if (found) return found;
+      // fallback: match by city only
+      found = (serviceCenters || []).find(c => normalize(c.city) === ci);
+      if (found) return found;
+      // fallback: match by region + city includes (loose match)
+      found = (serviceCenters || []).find(
+        c => normalize(c.region) === r && normalize(c.city).includes(ci)
+      );
+      if (found) return found;
+      // fallback: first centre in region
+      found = (serviceCenters || []).find(c => normalize(c.region) === r);
+      return found || null;
+    };
+
+    let sender = findCenter(data.senderRegion, data.senderServiceCenter);
+    let receiver = findCenter(data.receiverRegion, data.receiverServiceCenter);
+
+    // debug when things go wrong
+    if (!sender || !receiver) {
+      console.debug('SendParcel: missing center', {
+        data,
+        sender,
+        receiver,
+        serviceCenters,
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Location not found',
+        text: 'Selected sender or receiver pickup warehouse could not be matched. Please re-select.',
+      });
+      return;
+    }
 
     const costObj = calculateCost(
       data.parcelType,
@@ -113,7 +170,18 @@ const SendParcel = () => {
       sender,
       receiver
     );
-    setDeliveryCost(costObj);
+    setDeliveryCost(costObj.total);
+    if (!costObj || typeof costObj.total !== 'number' || isNaN(costObj.total)) {
+      console.warn('calculateCost returned invalid total', costObj);
+    }
+    if (costObj.total === 0) {
+      console.debug('SendParcel: calculated total is 0', {
+        data,
+        sender,
+        receiver,
+        costObj,
+      });
+    }
 
     // toast.success(`Estimated Delivery Cost: €${cost.toFixed(2)}`, {
     //   duration: 3000,
@@ -139,8 +207,8 @@ const SendParcel = () => {
           costObj.breakdown.base ? '€' + costObj.breakdown.base.toFixed(2) : '-'
         }</strong></div>
         <div style="display:flex;justify-content:space-between"><span>Weight charge</span><strong>${
-          costObj.breakdown.weightCharge
-            ? '€' + costObj.breakdown.weightCharge.toFixed(2)
+          costObj.breakdown.extraWeightCharge
+            ? '€' + costObj.breakdown.extraWeightCharge.toFixed(2)
             : '-'
         }</strong></div>
         <div style="display:flex;justify-content:space-between"><span>Regional surcharge</span><strong>${
@@ -176,9 +244,27 @@ const SendParcel = () => {
       if (result.isConfirmed) {
         // Create parcel entry object
         const parcel = {
+          // sender_name: data.senderName,
+          // sender_region: sender.region,
+          // sender_center: sender.city,
+          // sender_address: data.senderAddress,
+          // sender_contact: data.senderContact,
+          // sender_pickup_instruction: data.senderPickupInstruction || '',
+
+          // receiver_name: data.receiverName,
+          // receiver_region: receiver.region,
+          // receiver_center: receiver.city,
+          // receiver_address: data.receiverAddress,
+          // receiver_contact: data.receiverContact,
+          // receiver_delivery_instruction: data.receiverDeliveryInstruction || '',
+
+          // parcel_name: data.parcelName,
+          // parcel_type: data.parcelType,
+          // parcel_weight: Number(data.parcelWeight) || 0,
           ...data,
           cost: costObj.total,
           costBreakdown: costObj.breakdown,
+
           creation_date: new Date().toISOString(),
           payment_status: 'unpaid',
           delivery_status: 'not collected',
