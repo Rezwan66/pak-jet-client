@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from 'react-router';
 import useAuth from '../hooks/useAuth';
+import Spinner from '../components/Spinner';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -7,13 +8,7 @@ const PrivateRoute = ({ children }) => {
   console.log(location);
 
   if (loading) {
-    return (
-      <div className="max-h-screen flex items-center justify-center">
-        <span className="loading loading-spinner loading-xl text-primary"></span>
-        <span className="loading loading-spinner loading-xl text-primary"></span>
-        <span className="loading loading-spinner loading-xl text-primary"></span>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (!user) {
