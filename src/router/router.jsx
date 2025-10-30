@@ -10,6 +10,7 @@ import SendParcel from '../pages/SendParcel/SendParcel';
 import DashboardLayout from '../layouts/DashboardLayout';
 import MyParcels from '../pages/Dashboard/MyParcels/MyParcels';
 import Payment from '../pages/Dashboard/Payment/Payment';
+import DashboardHome from '../pages/Dashboard/Home/DashboardHome';
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: '/dashboard',
+        Component: DashboardHome,
+      },
       {
         path: 'myParcels',
         Component: MyParcels,

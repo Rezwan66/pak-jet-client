@@ -83,9 +83,12 @@ const PaymentForm = () => {
   return (
     <>
       <div className="min-h-screen px-2 pt-10 md:pt-20 lg:pt-40">
+        <h2 className="text-3xl font-bold mb-6 text-center">
+          💶 Pay for your parcel
+        </h2>
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 bg-base-200 p-6 rounded-xl shadow-md w-full max-w-md mx-auto"
+          className="space-y-4 bg-base-200 py-10 px-6 rounded-xl shadow-md w-full max-w-md mx-auto"
         >
           <CardElement className="p-2 border rounded" />
           <button
