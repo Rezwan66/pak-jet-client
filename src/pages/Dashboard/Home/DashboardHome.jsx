@@ -1,7 +1,11 @@
+import Spinner from '../../../components/Spinner';
 import useAuth from '../../../hooks/useAuth';
 
 const DashboardHome = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <>
       <div>
