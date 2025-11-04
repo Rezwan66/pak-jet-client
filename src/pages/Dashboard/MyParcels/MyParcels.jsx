@@ -76,6 +76,13 @@ const MyParcels = () => {
     }
   };
 
+  const totalToPay = parcels?.reduce((acc, parcel) => {
+    if (parcel.payment_status === 'unpaid') {
+      acc += parcel.cost;
+    }
+    return acc;
+  }, 0);
+
   return (
     <>
       <div className=" px-6 py-10">
@@ -178,6 +185,7 @@ const MyParcels = () => {
               )}
             </tbody>
           </table>
+          {/* <h3>Total to pay: {totalToPay}</h3> */}
         </div>
       </div>
     </>
